@@ -20,6 +20,7 @@ galleryItems.forEach((item) => {
         `;
   gallery.innerHTML += li;
 });
+
     /* This code iterates over each item in the galleryItems array using forEach.
     For each item, it constructs an HTML string (li) representing a gallery item with an anchor (a) tag containing an image (img) tag.
     It uses template literals to dynamically insert properties like preview, original, and description into the HTML string.
