@@ -1,53 +1,38 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-const galleryList = document.querySelector(".gallery");
+let gallery = document.querySelector(".gallery");
 
-const createGallery = (element) => {
-  return element
-    .map(({ preview, original, description }) => {
-      return `
+galleryItems.forEach((item) => {
+  let li = `
         <li class="gallery__item">
-            <a class="gallery__link" href="${original}">
+            <a class="gallery__link" href="javascript:void(0)">
                 <img
                 class="gallery__image"
-                src="${preview}"
-                data-source="${original}"
-                alt="${description}"
+                src="${item.preview}"
+                data-source="${item.original}"
+                alt="${item.description}"
                 />
             </a>
-        </li>`;
-    })
-    .join("");
-};
+        </li>
+        `;
+  gallery.innerHTML += li;
+});
 
-const photosMarkup = createGallery(galleryItems);
-galleryList.insertAdjacentHTML("beforeend", photosMarkup);
+//EVENT DELEGATION
+gallery.addEventListener("click", (e) => {
+  if (e.target.tagName === "IMG") {
+    let bigImage = e.target.getAttribute("data-source");
+    let instance = basicLightbox.create(
+      `<img src="${bigImage}" width="800" height="600"/>`
+    );
+    instance.show();
 
-// --------------------------------------------------------------
-
-// handleGalleryClick
-const handleGalleryClick = (event) => {
-  event.preventDefault();
-
-  if (event.target.nodeName !== "IMG") {
-    return;
+    window.addEventListener("keyup", (e) => {
+      if (e.code === "Escape") {
+        console.log("esc key is pressed");
+        instance.close();
+      }
+    });
   }
-
-  const urlOriginal = event.target.dataset.source;
-  // create new basicLightbox instance
-  const instance = basicLightbox.create(`<img src="${urlOriginal}">`);
-  instance.show();
-
-  // handleOnEscKeyPress
-  const handleOnEscKeyPress = (event) => {
-    if (event.key === "Escape") {
-      instance.close();
-      window.removeEventListener("keydown", handleOnEscKeyPress);
-    }
-  };
-
-  window.addEventListener("keydown", handleOnEscKeyPress);
-};
-
-galleryList.addEventListener("click", handleGalleryClick);
+});
